@@ -10,16 +10,32 @@ export default function Cart() {
 
   const [addedProducts, setAddedProducts] = useState([]);
 
+  const updateProductQuantity = (name, quantity) => {
+    setAddedProducts((curr) =>
+      curr.map((product) => {
+        if (product.name === name) {
+          return { ...product, quantity };
+        }
+        return product;
+      })
+    );
+  };
+
   const addToCart = (product) => {
-    //prodotto già presente => return
-    if (addedProducts.some((p) => p.name === product.name)) {
-      console.log("Prodotto già presente", product.name);
+    const addedProduct = addedProducts.find((p) => p.name === product.name);
+    if (addedProduct) {
+      updateProductQuantity(addedProduct.name, addedProduct.quantity + 1);
       return;
     }
-    //inserisci prodotto con quantità 1
-    setAddedProducts([...addedProducts, { ...product, quantity: 1 }]);
-    console.log("Prodotti aggiunti:", product.name);
+    setAddedProducts((curr) => [
+      ...curr,
+      {
+        ...product,
+        quantity: 1,
+      },
+    ]);
   };
+
   return (
     <div className="cart">
       <h3>Carrello dei Prodotti</h3>
@@ -38,10 +54,9 @@ export default function Cart() {
       </ul>
       <ul className="addedList">
         {addedProducts.map((p, i) => (
-          <li
-            key={i}
-            className="product"
-          >{`${p.name} - € ${p.price} - ${p.quantity}`}</li>
+          <li key={i} className="product">{`${p.name} - € ${p.price.toFixed(
+            2
+          )} - ${p.quantity}`}</li>
         ))}
       </ul>
     </div>
