@@ -36,6 +36,12 @@ export default function Cart() {
     ]);
   };
 
+  const removeFromCart = (product) => {
+    setAddedProducts((curr) => curr.filter((p) => p.name !== product.name));
+  };
+
+  const total = addedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
+
   return (
     <div className="cart">
       <h3>Carrello dei Prodotti</h3>
@@ -54,11 +60,16 @@ export default function Cart() {
       </ul>
       <ul className="addedList">
         {addedProducts.map((p, i) => (
-          <li key={i} className="product">{`${p.name} - € ${p.price.toFixed(
-            2
-          )} - ${p.quantity}`}</li>
+          <li key={i} className="product">
+            <p>{`${p.name} - € ${p.price.toFixed(2)} - ${p.quantity}`}</p>
+            <button onClick={() => removeFromCart(p)}>
+              {" "}
+              Rimuovi dal Carrello
+            </button>
+          </li>
         ))}
       </ul>
+      <h3>Totale da pagare : €{total.toFixed(2)}</h3>
     </div>
   );
 }
